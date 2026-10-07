@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ carro.fabricante }} {{ carro.modelo }} - British Cars</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container">
+
+            <a class="voltar" href="/">
+                ← Voltar para o catálogo
+            </a>
+
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <section class="detalhes">
+
+            <div class="imagem-detalhes">
+                <span>{{ carro.fabricante }}</span>
+            </div>
+
+
+            <div class="informacoes">
+
+                <p class="fabricante">
+                    {{ carro.fabricante }}
+                </p>
+
+                <h1>{{ carro.modelo }}</h1>
+
+                <p class="descricao">
+                    {{ carro.descricao }}
+                </p>
+
+
+                <div class="especificacoes">
+
+                    <div>
+                        <span>Ano</span>
+                        <strong>{{ carro.ano }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Cor</span>
+                        <strong>{{ carro.cor }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Motor</span>
+                        <strong>{{ carro.especificacoes.motor }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Potência</span>
+                        <strong>{{ carro.especificacoes.potencia }} cv</strong>
+                    </div>
+
+                    <div>
+                        <span>Torque</span>
+                        <strong>{{ carro.especificacoes.torque }} Nm</strong>
+                    </div>
+
+                    <div>
+                        <span>Câmbio</span>
+                        <strong>{{ carro.especificacoes.cambio }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Tração</span>
+                        <strong>{{ carro.especificacoes.tracao }}</strong>
+                    </div>
+
+                    <div>
+                        <span>0-100 km/h</span>
+                        <strong>{{ carro.especificacoes.aceleracao }} s</strong>
+                    </div>
+
+                    <div>
+                        <span>Velocidade máxima</span>
+                        <strong>
+                            {{ carro.especificacoes.velocidade_maxima }} km/h
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Preço de referência</span>
+                        <strong>
+                            R$ {{ "{:,.2f}".format(carro.preco).replace(",", "X").replace(".", ",").replace("X", ".") }}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>British Cars</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="container">
+
+            <h1>BRITISH CARS</h1>
+
+            <p>Catálogo de carros esportivos britânicos</p>
+
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <div class="titulo-secao">
+            <h2>Carros</h2>
+
+            <span>{{ carros|length }} modelos</span>
+        </div>
+
+
+        <section class="catalogo">
+
+            {% for carro in carros %}
+
+            <article class="card">
+
+                <div class="imagem-carro">
+                    <span>{{ carro.fabricante }}</span>
+                </div>
+
+                <div class="card-conteudo">
+
+                    <p class="fabricante">
+                        {{ carro.fabricante }}
+                    </p>
+
+                    <h3>{{ carro.modelo }}</h3>
+
+                    <p class="descricao">
+                        {{ carro.descricao }}
+                    </p>
+
+                    <div class="dados">
+
+                        <div>
+                            <span>Potência</span>
+                            <strong>
+                                {{ carro.especificacoes.potencia }} cv
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>0-100 km/h</span>
+                            <strong>
+                                {{ carro.especificacoes.aceleracao }} s
+                            </strong>
+                        </div>
+
+                        <div>
+                            <span>Velocidade</span>
+                            <strong>
+                                {{ carro.especificacoes.velocidade_maxima }} km/h
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <a
+                        class="botao"
+                        href="{{ url_for('detalhes_carro', modelo=carro.modelo) }}"
+                    >
+                        Ver detalhes
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

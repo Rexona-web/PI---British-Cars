@@ -1,117 +1,100 @@
-from models.motor import Motor
-from models.cor import Cor
-from models.acessorio import Acessorio
 from models.catalogo import Catalogo
-from models.especificacoes import Especificacoes
+from dados.carros import criar_carros
 
 
-# =========================
-# CRIAÇÃO DOS CARROS
-# =========================
-
-carro1 = Motor(
-    "Aston Martin Vantage",
-    1500000,
-    "Esportivo britânico de alto desempenho",
-    "aston_martin_vantage.jpg",
-    "V8 4.0 Twin-Turbo",
-    665
-)
-
-carro2 = Motor(
-    "McLaren 750S",
-    3500000,
-    "Superesportivo britânico focado em desempenho",
-    "mclaren_750s.jpg",
-    "V8 4.0 Twin-Turbo",
-    750
-)
-
-carro3 = Cor(
-    "Lotus Emira",
-    950000,
-    "Esportivo britânico de motor central",
-    "lotus_emira.jpg",
-    "Hethel Yellow",
-    "Metálico"
-)
-
-carro4 = Cor(
-    "Jaguar F-Type",
-    800000,
-    "Esportivo britânico de duas portas",
-    "jaguar_f_type.jpg",
-    "British Racing Green",
-    "Perolizado"
-)
-
-carro5 = Acessorio(
-    "Bentley Continental GT",
-    1800000,
-    "Grand Tourer britânico de luxo",
-    "bentley_continental_gt.jpg",
-    "Sistema de som Naim",
-    35000
-)
-
-
-# =========================
-# CATÁLOGO
-# =========================
-
+# Criação do catálogo
 catalogo = Catalogo()
 
-catalogo.adicionar_carro(carro1)
-catalogo.adicionar_carro(carro2)
-catalogo.adicionar_carro(carro3)
-catalogo.adicionar_carro(carro4)
-catalogo.adicionar_carro(carro5)
+carros = criar_carros()
+
+for carro in carros:
+    catalogo.adicionar(carro)
 
 
-# =========================
-# LISTAGEM
-# =========================
+# Listando os carros
+print("\n=========================")
+print("TODOS OS CARROS")
+print("=========================")
 
-print("=== CATÁLOGO DE CARROS ESPORTIVOS BRITÂNICOS ===")
-
-catalogo.listar_carros()
+catalogo.listar()
 
 
-# =========================
-# BUSCA
-# =========================
+# Busca por modelo
+print("\n=========================")
+print("BUSCA POR MODELO")
+print("=========================")
 
-print("\n=== BUSCA DE CARRO ===")
+resultado = catalogo.buscar_por_modelo("750S")
 
-modelo = input("Digite o modelo que deseja buscar: ")
-
-carro_encontrado = catalogo.buscar_por_modelo(modelo)
-
-if carro_encontrado:
-    print("\nCarro encontrado:")
-    carro_encontrado.exibir_dados()
+if resultado:
+    resultado.exibir_dados()
 else:
-    print("\nCarro não encontrado.")
+    print("Carro não encontrado.")
 
 
-# =========================
-# REMOÇÃO
-# =========================
+# Filtro por fabricante
+print("\n=========================")
+print("FILTRO POR FABRICANTE")
+print("=========================")
 
-print("\n=== REMOVER CARRO ===")
+aston_martin = catalogo.filtrar_por_fabricante("Aston Martin")
 
-modelo = input("Digite o modelo que deseja remover: ")
+for carro in aston_martin:
+    carro.exibir_dados()
 
-if catalogo.remover_carro(modelo):
-    print("\nCarro removido com sucesso!")
+
+# Filtro por potência
+print("\n=========================")
+print("FILTRO POR POTÊNCIA")
+print("=========================")
+
+carros_potentes = catalogo.filtrar_por_potencia(700)
+
+for carro in carros_potentes:
+    carro.exibir_dados()
+
+
+# Filtro por ano
+print("\n=========================")
+print("FILTRO POR ANO")
+print("=========================")
+
+carros_novos = catalogo.filtrar_por_ano(2024)
+
+for carro in carros_novos:
+    carro.exibir_dados()
+
+
+# Filtro por preço
+print("\n=========================")
+print("FILTRO POR PREÇO")
+print("=========================")
+
+carros_mais_baratos = catalogo.filtrar_por_preco(1500000)
+
+for carro in carros_mais_baratos:
+    carro.exibir_dados()
+
+
+# Filtro por velocidade
+print("\n=========================")
+print("FILTRO POR VELOCIDADE")
+print("=========================")
+
+carros_rapidos = catalogo.filtrar_por_velocidade(330)
+
+for carro in carros_rapidos:
+    carro.exibir_dados()
+
+
+# Remoção
+print("\n=========================")
+print("REMOÇÃO DE CARRO")
+print("=========================")
+
+removido = catalogo.remover_por_modelo("750S")
+
+if removido:
+    print("Carro removido com sucesso.")
 else:
-    print("\nCarro não encontrado.")
-
-
-# =========================
-# CATÁLOGO ATUALIZADO
-# =========================
-
-print("\n=== CATÁLOGO ATUALIZADO ===")
-
-catalogo.listar_carros()
+    print("Carro não encontrado.")
