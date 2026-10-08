@@ -28,8 +28,11 @@
         <section class="detalhes">
 
             <div class="imagem-detalhes">
-                <span>{{ carro.fabricante }}</span>
-            </div>
+    <img
+        src="{{ url_for('static', filename='imagens/' + carro.imagem) }}"
+        alt="{{ carro.fabricante }} {{ carro.modelo }}"
+    >
+        </div>
 
 
             <div class="informacoes">
