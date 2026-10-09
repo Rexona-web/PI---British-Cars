@@ -1,37 +1,47 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>British Cars</title>
+
+    <title>British Cars | Catálogo Automotivo</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
     <header class="topo">
-        <h1>BRITISH CARS</h1>
+        <a href="{{ url_for('inicio') }}" class="logo">
+            BRITISH <span>CARS</span>
+        </a>
+
         <p>Catálogo de carros esportivos britânicos</p>
-        <p>{{ carros|length }} modelos</p>
+
+        <div class="linha-dourada"></div>
+
+        <p class="quantidade">{{ carros|length }} modelos no catálogo</p>
     </header>
 
     <main class="container">
 
         {% for carro in carros %}
 
-        <div class="card">
+        <article class="card">
 
             <div class="imagem-carro">
-                <img src="{{ url_for('static', filename='imagens/' + carro.imagem) }}"
-                     alt="{{ carro.modelo }}">
+                <img
+                    src="{{ url_for('static', filename='imagens/' + carro.imagem) }}"
+                    alt="{{ carro.fabricante }} {{ carro.modelo }}"
+                    loading="lazy"
+                >
             </div>
 
             <div class="card-conteudo">
 
-                <p class="fabricante">
-                    {{ carro.fabricante }}
-                </p>
+                <p class="fabricante">{{ carro.fabricante }}</p>
 
                 <h2>{{ carro.modelo }}</h2>
 
@@ -39,35 +49,52 @@
                     {{ carro.descricao }}
                 </p>
 
-                <div class="dados">
-                    <div>
+                <div class="especificacoes-resumo">
+
+                    <div class="especificacao">
                         <span>Potência</span>
                         <strong>{{ carro.especificacoes.potencia }} cv</strong>
                     </div>
 
-                    <div>
-                        <span>0-100 km/h</span>
+                    <div class="especificacao">
+                        <span>0–100 km/h</span>
                         <strong>{{ carro.especificacoes.aceleracao }} s</strong>
                     </div>
 
-                    <div>
-                        <span>Velocidade</span>
+                    <div class="especificacao">
+                        <span>Velocidade máxima</span>
                         <strong>{{ carro.especificacoes.velocidade_maxima }} km/h</strong>
                     </div>
+
                 </div>
 
-                <a class="botao"
-                   href="{{ url_for('detalhes_carro', modelo=carro.modelo) }}">
+                <a
+                    href="{{ url_for('detalhes_carro', modelo=carro.modelo) }}"
+                    class="botao-detalhes"
+                >
                     Ver detalhes
+                    <span aria-hidden="true">→</span>
                 </a>
 
             </div>
 
-        </div>
+        </article>
+
+        {% else %}
+
+        <p class="mensagem-vazia">
+            Nenhum carro cadastrado no momento.
+        </p>
 
         {% endfor %}
 
     </main>
 
+    <footer class="rodape">
+        <p>BRITISH CARS</p>
+        <span>Um catálogo dedicado à engenharia automotiva britânica.</span>
+    </footer>
+
 </body>
 </html>
+```

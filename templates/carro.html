@@ -1,55 +1,54 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{{ carro.fabricante }} {{ carro.modelo }} - British Cars</title>
+    <title>{{ carro.modelo }} | British Cars</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-    <header class="header">
-        <div class="container">
+    <header class="topo topo-detalhes">
+        <a href="{{ url_for('inicio') }}" class="logo">
+            BRITISH <span>CARS</span>
+        </a>
 
-            <a class="voltar" href="/">
-                ← Voltar para o catálogo
-            </a>
+        <p>Ficha técnica do veículo</p>
 
-        </div>
+        <div class="linha-dourada"></div>
     </header>
 
+    <main class="pagina-detalhes">
 
-    <main class="container">
+        <a href="{{ url_for('inicio') }}" class="voltar">
+            ← Voltar ao catálogo
+        </a>
 
-        <section class="detalhes">
+        <article class="detalhe-card">
 
-            <div class="imagem-detalhes">
-    <img
-        src="{{ url_for('static', filename='imagens/' + carro.imagem) }}"
-        alt="{{ carro.fabricante }} {{ carro.modelo }}"
-    >
-        </div>
+            <div class="detalhe-imagem">
+                <img
+                    src="{{ url_for('static', filename='imagens/' + carro.imagem) }}"
+                    alt="{{ carro.fabricante }} {{ carro.modelo }}"
+                >
+            </div>
 
+            <div class="detalhe-conteudo">
 
-            <div class="informacoes">
-
-                <p class="fabricante">
-                    {{ carro.fabricante }}
-                </p>
+                <p class="fabricante">{{ carro.fabricante }}</p>
 
                 <h1>{{ carro.modelo }}</h1>
 
-                <p class="descricao">
+                <p class="detalhe-descricao">
                     {{ carro.descricao }}
                 </p>
 
-
-                <div class="especificacoes">
-
+                <div class="ano-cor">
                     <div>
                         <span>Ano</span>
                         <strong>{{ carro.ano }}</strong>
@@ -59,59 +58,67 @@
                         <span>Cor</span>
                         <strong>{{ carro.cor }}</strong>
                     </div>
+                </div>
 
-                    <div>
+                <h2 class="titulo-especificacoes">
+                    Especificações técnicas
+                </h2>
+
+                <div class="lista-especificacoes">
+
+                    <div class="linha-especificacao">
                         <span>Motor</span>
                         <strong>{{ carro.especificacoes.motor }}</strong>
                     </div>
 
-                    <div>
+                    <div class="linha-especificacao">
                         <span>Potência</span>
                         <strong>{{ carro.especificacoes.potencia }} cv</strong>
                     </div>
 
-                    <div>
+                    <div class="linha-especificacao">
                         <span>Torque</span>
                         <strong>{{ carro.especificacoes.torque }} Nm</strong>
                     </div>
 
-                    <div>
+                    <div class="linha-especificacao">
                         <span>Câmbio</span>
                         <strong>{{ carro.especificacoes.cambio }}</strong>
                     </div>
 
-                    <div>
+                    <div class="linha-especificacao">
                         <span>Tração</span>
                         <strong>{{ carro.especificacoes.tracao }}</strong>
                     </div>
 
-                    <div>
-                        <span>0-100 km/h</span>
+                    <div class="linha-especificacao">
+                        <span>0–100 km/h</span>
                         <strong>{{ carro.especificacoes.aceleracao }} s</strong>
                     </div>
 
-                    <div>
+                    <div class="linha-especificacao">
                         <span>Velocidade máxima</span>
-                        <strong>
-                            {{ carro.especificacoes.velocidade_maxima }} km/h
-                        </strong>
-                    </div>
-
-                    <div>
-                        <span>Preço de referência</span>
-                        <strong>
-                            R$ {{ "{:,.2f}".format(carro.preco).replace(",", "X").replace(".", ",").replace("X", ".") }}
-                        </strong>
+                        <strong>{{ carro.especificacoes.velocidade_maxima }} km/h</strong>
                     </div>
 
                 </div>
 
+                <p class="aviso-dados">
+                    Os dados apresentados são informativos e podem variar
+                    conforme a versão e o mercado.
+                </p>
+
             </div>
 
-        </section>
+        </article>
 
     </main>
 
-</body>
+    <footer class="rodape">
+        <p>BRITISH CARS</p>
+        <span>Um catálogo dedicado à engenharia automotiva britânica.</span>
+    </footer>
 
+</body>
 </html>
+```
