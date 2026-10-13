@@ -45,7 +45,7 @@ def criar_carros():
         3500000,
         "Superesportivo britânico focado em desempenho.",
         "mclaren_750s.jpg",
-        "Laranja",
+        "azul",
         especificacoes_750s
     )
 

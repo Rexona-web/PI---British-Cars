@@ -1,6 +1,5 @@
 from banco.conexao import conectar
 
-
 class CarroRepositorio:
 
     def cadastrar(self, carro):
@@ -9,18 +8,11 @@ class CarroRepositorio:
         try:
             cursor = conexao.cursor()
 
-            existente = cursor.execute(
-                "SELECT id FROM carros WHERE modelo = ? AND ano = ?",
-                (carro.modelo, carro.ano)
-            ).fetchone()
-
-            if existente:
-                return existente["id"]
-
-            fabricante = cursor.execute(
+            cursor.execute(
                 "SELECT id FROM fabricantes WHERE nome = ?",
                 (carro.fabricante,)
-            ).fetchone()
+            )
+            fabricante = cursor.fetchone()
 
             if fabricante is None:
                 cursor.execute(
@@ -40,27 +32,37 @@ class CarroRepositorio:
                 VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    carro.modelo, carro.ano, carro.preco,
-                    carro.descricao, carro.imagem, carro.cor,
+                    carro.modelo,
+                    carro.ano,
+                    carro.preco,
+                    carro.descricao,
+                    carro.imagem,
+                    carro.cor,
                     fabricante_id
                 )
             )
 
             carro_id = cursor.lastrowid
-            esp = carro.especificacoes
+            especificacoes = carro.especificacoes
 
             cursor.execute(
                 """
                 INSERT INTO especificacoes (
                     carro_id, motor, potencia, torque,
-                    cambio, tracao, aceleracao, velocidade_maxima
+                    cambio, tracao, aceleracao,
+                    velocidade_maxima
                 )
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
-                    carro_id, esp.motor, esp.potencia, esp.torque,
-                    esp.cambio, esp.tracao, esp.aceleracao,
-                    esp.velocidade_maxima
+                    carro_id,
+                    especificacoes.motor,
+                    especificacoes.potencia,
+                    especificacoes.torque,
+                    especificacoes.cambio,
+                    especificacoes.tracao,
+                    especificacoes.aceleracao,
+                    especificacoes.velocidade_maxima
                 )
             )
 
@@ -78,7 +80,8 @@ class CarroRepositorio:
         conexao = conectar()
 
         try:
-            return conexao.execute("""
+            return conexao.execute(
+                """
                 SELECT
                     carros.id,
                     carros.modelo,
@@ -101,7 +104,8 @@ class CarroRepositorio:
                 INNER JOIN especificacoes
                     ON especificacoes.carro_id = carros.id
                 ORDER BY fabricantes.nome, carros.modelo
-            """).fetchall()
+                """
+            ).fetchall()
 
         finally:
             conexao.close()
@@ -110,7 +114,8 @@ class CarroRepositorio:
         conexao = conectar()
 
         try:
-            return conexao.execute("""
+            return conexao.execute(
+                """
                 SELECT
                     carros.id,
                     carros.modelo,
@@ -133,80 +138,145 @@ class CarroRepositorio:
                 INNER JOIN especificacoes
                     ON especificacoes.carro_id = carros.id
                 WHERE carros.id = ?
-            """, (carro_id,)).fetchone()
+                """,
+                (carro_id,)
+            ).fetchone()
 
         finally:
             conexao.close()
 
-    def atualizar(self, carro_id, dados):
+    def buscar_por_modelo(self, modelo):
+        conexao = conectar()
+
+        try:
+            return conexao.execute(
+                """
+                SELECT
+                    carros.id,
+                    carros.modelo,
+                    carros.ano,
+                    carros.preco,
+                    carros.descricao,
+                    carros.imagem,
+                    carros.cor,
+                    fabricantes.nome AS fabricante,
+                    especificacoes.motor,
+                    especificacoes.potencia,
+                    especificacoes.torque,
+                    especificacoes.cambio,
+                    especificacoes.tracao,
+                    especificacoes.aceleracao,
+                    especificacoes.velocidade_maxima
+                FROM carros
+                INNER JOIN fabricantes
+                    ON carros.fabricante_id = fabricantes.id
+                INNER JOIN especificacoes
+                    ON especificacoes.carro_id = carros.id
+                WHERE LOWER(carros.modelo) = LOWER(?)
+                """,
+                (modelo,)
+            ).fetchone()
+
+        finally:
+            conexao.close()
+
+    def atualizar(self, carro_id, carro):
         conexao = conectar()
 
         try:
             cursor = conexao.cursor()
 
-            existente = cursor.execute(
-                "SELECT id FROM carros WHERE id = ?",
-                (carro_id,)
-            ).fetchone()
-
-            if existente is None:
-                return False
-
-            fabricante = cursor.execute(
+            cursor.execute(
                 "SELECT id FROM fabricantes WHERE nome = ?",
-                (dados["fabricante"].strip(),)
-            ).fetchone()
+                (carro.fabricante,)
+            )
+            fabricante = cursor.fetchone()
 
             if fabricante is None:
                 cursor.execute(
                     "INSERT INTO fabricantes (nome) VALUES (?)",
-                    (dados["fabricante"].strip(),)
+                    (carro.fabricante,)
                 )
                 fabricante_id = cursor.lastrowid
             else:
                 fabricante_id = fabricante["id"]
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE carros
-                SET modelo = ?, ano = ?, preco = ?,
-                    descricao = ?, imagem = ?, cor = ?,
+                SET modelo = ?,
+                    ano = ?,
+                    preco = ?,
+                    descricao = ?,
+                    imagem = ?,
+                    cor = ?,
                     fabricante_id = ?
                 WHERE id = ?
-            """, (
-                dados["modelo"].strip(),
-                int(dados["ano"]),
-                float(dados["preco"]),
-                dados["descricao"].strip(),
-                dados["imagem"].strip(),
-                dados["cor"].strip(),
-                fabricante_id,
-                carro_id
-            ))
-
-            cursor.execute("""
-                UPDATE especificacoes
-                SET motor = ?, potencia = ?, torque = ?,
-                    cambio = ?, tracao = ?, aceleracao = ?,
-                    velocidade_maxima = ?
-                WHERE carro_id = ?
-            """, (
-                dados["motor"].strip(),
-                int(dados["potencia"]),
-                int(dados["torque"]),
-                dados["cambio"].strip(),
-                dados["tracao"].strip(),
-                float(dados["aceleracao"]),
-                int(dados["velocidade_maxima"]),
-                carro_id
-            ))
+                """,
+                (
+                    carro.modelo,
+                    carro.ano,
+                    carro.preco,
+                    carro.descricao,
+                    carro.imagem,
+                    carro.cor,
+                    fabricante_id,
+                    carro_id
+                )
+            )
 
             if cursor.rowcount == 0:
-                raise ValueError(
-                    "As especificações deste carro não foram encontradas."
+                raise ValueError("Carro não encontrado.")
+
+            especificacoes = carro.especificacoes
+
+            cursor.execute(
+                """
+                UPDATE especificacoes
+                SET motor = ?,
+                    potencia = ?,
+                    torque = ?,
+                    cambio = ?,
+                    tracao = ?,
+                    aceleracao = ?,
+                    velocidade_maxima = ?
+                WHERE carro_id = ?
+                """,
+                (
+                    especificacoes.motor,
+                    especificacoes.potencia,
+                    especificacoes.torque,
+                    especificacoes.cambio,
+                    especificacoes.tracao,
+                    especificacoes.aceleracao,
+                    especificacoes.velocidade_maxima,
+                    carro_id
+                )
+            )
+
+            if cursor.rowcount == 0:
+                cursor.execute(
+                    """
+                    INSERT INTO especificacoes (
+                        carro_id, motor, potencia, torque,
+                        cambio, tracao, aceleracao,
+                        velocidade_maxima
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        carro_id,
+                        especificacoes.motor,
+                        especificacoes.potencia,
+                        especificacoes.torque,
+                        especificacoes.cambio,
+                        especificacoes.tracao,
+                        especificacoes.aceleracao,
+                        especificacoes.velocidade_maxima
+                    )
                 )
 
             conexao.commit()
-            return True
 
         except Exception:
             conexao.rollback()
@@ -219,13 +289,17 @@ class CarroRepositorio:
         conexao = conectar()
 
         try:
-            cursor = conexao.execute(
+            cursor = conexao.cursor()
+
+            cursor.execute(
                 "DELETE FROM carros WHERE id = ?",
                 (carro_id,)
             )
 
+            if cursor.rowcount == 0:
+                raise ValueError("Carro não encontrado.")
+
             conexao.commit()
-            return cursor.rowcount > 0
 
         except Exception:
             conexao.rollback()

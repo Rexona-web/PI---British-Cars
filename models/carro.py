@@ -1,3 +1,4 @@
+
 from .item_catalogo import ItemCatalogo
 
 
@@ -21,9 +22,21 @@ class Carro(ItemCatalogo):
             especificacoes
         )
 
-        self.fabricante = fabricante
-        self.ano = ano
-        self.cor = cor
+        self.__fabricante = fabricante
+        self.__ano = ano
+        self.__cor = cor
+
+    @property
+    def fabricante(self):
+        return self.__fabricante
+
+    @property
+    def ano(self):
+        return self.__ano
+
+    @property
+    def cor(self):
+        return self.__cor
 
     def exibir_dados(self):
         super().exibir_dados()

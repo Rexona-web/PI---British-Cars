@@ -27,3 +27,4 @@ class Cor(ItemCatalogo):
         super().exibir_dados()
         print(f"Cor: {self.cor}")
         print(f"Acabamento: {self.acabamento}")
+    
