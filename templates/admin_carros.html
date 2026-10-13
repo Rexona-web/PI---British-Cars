@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar carros | British Cars</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f4f4f4;
+            color: #222;
+        }
+        h1 { color: #173b32; }
+        a, button { cursor: pointer; }
+        .acoes { margin: 20px 0; }
+        .botao {
+            display: inline-block;
+            padding: 10px 14px;
+            margin: 4px;
+            background: #173b32;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th { background: #173b32; color: white; }
+        .mensagem { padding: 10px; background: #e2eee5; margin: 8px 0; }
+        .excluir { background: #a52a2a; }
+        form { display: inline; }
+    </style>
+</head>
+<body>
+    <h1>Administração de carros</h1>
+    <p>Gerencie os veículos cadastrados no catálogo British Cars.</p>
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+            <p class="mensagem">{{ mensagem }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="acoes">
+        <a class="botao" href="{{ url_for('novo_carro') }}">Cadastrar carro</a>
+        <a class="botao" href="{{ url_for('inicio') }}">Voltar ao catálogo</a>
+    </div>
+
+    {% if carros %}
+    <table>
+        <thead>
+            <tr>
+                <th>Fabricante</th>
+                <th>Modelo</th>
+                <th>Ano</th>
+                <th>Preço</th>
+                <th>Cor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for carro in carros %}
+            <tr>
+                <td>{{ carro.fabricante }}</td>
+                <td>{{ carro.modelo }}</td>
+                <td>{{ carro.ano }}</td>
+                <td>R$ {{ carro.preco }}</td>
+                <td>{{ carro.cor }}</td>
+                <td>
+                    <a class="botao"
+                       href="{{ url_for('editar_carro', carro_id=carro.id) }}">
+                        Editar
+                    </a>
+
+                    <form method="POST"
+                          action="{{ url_for('excluir_carro', carro_id=carro.id) }}"
+                          onsubmit="return confirm('Deseja realmente excluir este carro?');">
+                        <button class="botao excluir" type="submit">
+                            Excluir
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Nenhum carro cadastrado.</p>
+    {% endif %}
+</body>
+</html>

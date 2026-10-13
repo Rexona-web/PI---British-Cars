@@ -1,5 +1,4 @@
-
-from banco.conexao import conectar
+﻿from banco.conexao import conectar
 
 
 def criar_tabelas():
@@ -39,10 +38,19 @@ def criar_tabelas():
                     REFERENCES carros(id)
                     ON DELETE CASCADE
             );
+
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                email TEXT NOT NULL UNIQUE,
+                senha_hash TEXT NOT NULL,
+                tipo TEXT NOT NULL DEFAULT 'usuario'
+                    CHECK (tipo IN ('usuario', 'admin'))
+            );
         """)
 
         conexao.commit()
-        print("Tabelas criadas com sucesso!")
+        print("Tabelas criadas ou verificadas com sucesso!")
 
     finally:
         conexao.close()

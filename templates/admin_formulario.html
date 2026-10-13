@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }} | British Cars</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 35px auto;
+            padding: 0 20px;
+            background: #f4f4f4;
+            color: #222;
+        }
+        h1 { color: #173b32; }
+        form {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+        }
+        label {
+            display: block;
+            margin-top: 14px;
+            font-weight: bold;
+        }
+        input, textarea {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+        textarea { min-height: 90px; resize: vertical; }
+        button, .botao {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 11px 16px;
+            background: #173b32;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .mensagem { padding: 10px; background: #e2eee5; }
+    </style>
+</head>
+<body>
+    <h1>{{ titulo }}</h1>
+
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+        {% for categoria, mensagem in mensagens %}
+            <p class="mensagem">{{ mensagem }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="fabricante">Fabricante</label>
+        <input id="fabricante" name="fabricante" value="{{ carro.get('fabricante', '') }}" required>
+
+        <label for="modelo">Modelo</label>
+        <input id="modelo" name="modelo" value="{{ carro.get('modelo', '') }}" required>
+
+        <label for="ano">Ano</label>
+        <input id="ano" name="ano" type="number" min="1900" max="2100" value="{{ carro.get('ano', '') }}" required>
+
+        <label for="preco">Preço em reais (ex.: 1500000 ou 1500000,50)</label>
+        <input id="preco" name="preco" type="text" value="{{ carro.get('preco', '') }}" required>
+
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" name="descricao" required>{{ carro.get('descricao', '') }}</textarea>
+
+        <label for="imagem">Caminho da imagem</label>
+        <input id="imagem" name="imagem" value="{{ carro.get('imagem', '') }}" placeholder="imagens/vantage.jpg" required>
+
+        <label for="cor">Cor</label>
+        <input id="cor" name="cor" value="{{ carro.get('cor', '') }}" required>
+
+        <label for="motor">Motor</label>
+        <input id="motor" name="motor" value="{{ carro.get('motor', '') }}" required>
+
+        <label for="potencia">Potência (cv)</label>
+        <input id="potencia" name="potencia" type="number" min="1" value="{{ carro.get('potencia', '') }}" required>
+
+        <label for="torque">Torque (Nm)</label>
+        <input id="torque" name="torque" type="number" min="1" value="{{ carro.get('torque', '') }}" required>
+
+        <label for="cambio">Câmbio</label>
+        <input id="cambio" name="cambio" value="{{ carro.get('cambio', '') }}" required>
+
+        <label for="tracao">Tração</label>
+        <input id="tracao" name="tracao" value="{{ carro.get('tracao', '') }}" required>
+
+        <label for="aceleracao">Aceleração de 0 a 100 km/h (segundos)</label>
+        <input id="aceleracao" name="aceleracao" type="text" value="{{ carro.get('aceleracao', '') }}" required>
+
+        <label for="velocidade_maxima">Velocidade máxima (km/h)</label>
+        <input id="velocidade_maxima" name="velocidade_maxima" type="number" min="1" value="{{ carro.get('velocidade_maxima', '') }}" required>
+
+        <button type="submit">Salvar carro</button>
+        <a class="botao" href="{{ url_for('admin_carros') }}">Cancelar</a>
+    </form>
+</body>
+</html>
+

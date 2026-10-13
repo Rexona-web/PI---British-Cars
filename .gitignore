@@ -1,0 +1,7 @@
+﻿__pycache__/
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+app.py.backup-*
+banco/*.db
